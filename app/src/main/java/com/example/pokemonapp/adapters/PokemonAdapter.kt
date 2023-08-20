@@ -1,19 +1,21 @@
 package com.example.pokemonapp.adapters
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.pokemonapp.Pokemon
+import com.example.pokemonapp.models.Pokemon
 import com.example.pokemonapp.R
+import com.example.pokemonapp.api.PokemonApiResponse
 import com.squareup.picasso.Picasso
 
-class PokemonAdapter(private val pokemonList: List<Pokemon>) : RecyclerView.Adapter<PokemonAdapter.PokemonViewHolder>() {
+class PokemonAdapter(private val pokemonList: MutableList<Pokemon>) : RecyclerView.Adapter<PokemonAdapter.PokemonViewHolder>() {
 
     inner class PokemonViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val pokemonImageView: ImageView = itemView.findViewById(R.id.pokemonImageView)
+        //val pokemonImageView: ImageView = itemView.findViewById(R.id.pokemonImageView)
         val pokemonTextView: TextView = itemView.findViewById(R.id.pokemonTextView)
     }
 
@@ -30,9 +32,26 @@ class PokemonAdapter(private val pokemonList: List<Pokemon>) : RecyclerView.Adap
     override fun onBindViewHolder(holder: PokemonViewHolder, position: Int) {
         val pokemon = pokemonList[position]
         holder.pokemonTextView.text = pokemon.name
-        Picasso.get()
-            .load(pokemon.imageURL)
-            .into(holder.pokemonImageView)
+//        Picasso.get()
+//            .load(pokemon.imageURL)
+//            .into(holder.pokemonImageView)
         TODO("Not yet implemented")
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateData(newPokemonList: List<PokemonApiResponse>){
+
+        val updatedList = newPokemonList.map {apiResponse ->
+            Pokemon(
+                name = apiResponse.name,
+                imageURL = apiResponse.url,
+                type = apiResponse.details.type,
+                height = apiResponse.details.height,
+                weight = apiResponse.details.weight
+            )
+        }
+        pokemonList.clear()
+        pokemonList.addAll(updatedList)
+        notifyDataSetChanged()
     }
 }
