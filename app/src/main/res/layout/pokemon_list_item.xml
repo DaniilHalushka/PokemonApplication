@@ -4,18 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:ignore="ExtraText">
 
-<!--    <ImageView-->
-<!--        android:id="@+id/pokemonImageView"-->
-<!--        android:layout_width="100dp"-->
-<!--        android:layout_height="100dp"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        android:contentDescription="TODO" />-->
+    <ImageView
+        android:id="@+id/pokemonImage"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="TODO" />
 
     <TextView
-        android:id="@+id/pokemonTextView"
+        android:id="@+id/pokemonName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@{pokemon.name}"
@@ -23,9 +24,10 @@
         android:textSize="60sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.466"
+        app:layout_constraintStart_toStartOf="parent"
         tools:ignore="MissingConstraints" />
-<!--        app:layout_constraintStart_toEndOf="@+id/pokemonImageView"-->
-<!--        tools:layout_editor_absoluteY="16dp" -->
+        app:layout_constraintStart_toEndOf="@+id/pokemonImageView"
+        tools:layout_editor_absoluteY="16dp"
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

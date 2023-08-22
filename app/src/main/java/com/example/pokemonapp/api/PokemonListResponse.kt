@@ -1,5 +1,8 @@
 package com.example.pokemonapp.api
 
-class PokemonListResponse(
+data class PokemonListResponse(
+    val count: Int,
+    val next: String?,
+    val previous: String?,
     val results: List<PokemonApiResponse>
 )

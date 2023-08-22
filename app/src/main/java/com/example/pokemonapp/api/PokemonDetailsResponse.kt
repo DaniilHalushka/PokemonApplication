@@ -1,7 +1,14 @@
 package com.example.pokemonapp.api
 
+import com.example.pokemonapp.models.Type
+
 class PokemonDetailsResponse(
-    val type: String,
-    val height: Double,
-    val weight: Double
-){}
+    val id: Int,
+    val name: String,
+    val type: List<PokemonType>
+)
+
+class PokemonType(
+    val number: Int,
+    val type: Type
+)
