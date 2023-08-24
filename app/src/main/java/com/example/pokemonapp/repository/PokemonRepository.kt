@@ -1,17 +1,22 @@
 package com.example.pokemonapp.repository
 
-import com.example.pokemonapp.api.PokemonApiService
+import android.util.Log
+import com.example.pokemonapp.api.NetworkService
+import com.example.pokemonapp.api.PokemonApiResult
 import com.example.pokemonapp.api.PokemonDetailsResponse
-import com.example.pokemonapp.api.PokemonListResponse
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
-class PokemonRepository(private val apiService: PokemonApiService) {
-    fun getPokemonList(limit: Int = 151): PokemonListResponse? {
-        val getResult = apiService.getPokemonList(limit)
+class PokemonRepository {
+    fun getPokemonList() : PokemonApiResult? {
+        val getResult = NetworkService.apiService.getPokemonList()
         return getResult.execute().body()
     }
 
     fun getPokemonDetails(numbers: Int): PokemonDetailsResponse?{
-        val getResult = apiService.getPokemonDetails(numbers)
+        val getResult = NetworkService.apiService.getPokemonDetails(numbers)
         return getResult.execute().body()
     }
 }
+

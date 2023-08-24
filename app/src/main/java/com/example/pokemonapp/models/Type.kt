@@ -1,5 +1,5 @@
 package com.example.pokemonapp.models
 
-class Type(
-    val typeOfPokemon: String
+data class Type(
+    val variant: String
 )

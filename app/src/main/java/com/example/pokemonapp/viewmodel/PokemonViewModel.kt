@@ -11,80 +11,39 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 class PokemonViewModel : ViewModel() {
-    private val repository: PokemonRepository = PokemonRepository(apiService)
-    private val pokemons: MutableLiveData<List<Pokemon>> = MutableLiveData()
+    //    private val repository: PokemonRepository = PokemonRepository(apiService)
+    var pokemons = MutableLiveData<List<Pokemon?>>()
 
-    val pokemonLiveData: LiveData<List<Pokemon>> get() = pokemons
+    //val pokemonLiveData: LiveData<List<Pokemon>> get() = pokemons
+
     init {
-        loadPokemonList()
+        Thread(Runnable {
+            loadPokemonList()
+        }).start()
     }
 
     private fun loadPokemonList() {
-        viewModelScope.launch {
-            val response = repository.getPokemonList()
+        val pokemonApi = PokemonRepository().getPokemonList()
 
-            if (response != null) {
-                val updatedList = mutableListOf<Pokemon>()
+        pokemonApi?.results?.let {
+            pokemons.postValue( it.map { pokemon ->
+                val utilNumber = pokemon.url
+                    .replace("https://pokeapi.co/api/v2/pokemon/", "")
+                    .replace("/", "").toInt()
 
-                val deferredList = response.results.map { pokemon ->
-                    async {
-                        val numberToURL = pokemon.url
-                            .replace("https://pokeapi.co/api/v2/pokemon/", "")
-                            .replace("/", "").toInt()
+                val pokemonDetailsResponse = PokemonRepository().getPokemonDetails(utilNumber)
 
-                        repository.getPokemonDetails(numberToURL)
-                    }
+                pokemonDetailsResponse?.let {
+                    Pokemon(
+                        pokemonDetailsResponse.id,
+                        pokemonDetailsResponse.name,
+                        pokemonDetailsResponse.types.map { type ->
+                            type.type
+                        }
+                    )
                 }
-
-                for (deferredDetailsResponse in deferredList) {
-                    val detailsResponse = deferredDetailsResponse.await()
-
-                    if (detailsResponse != null) {
-                        updatedList.add(
-                            Pokemon(
-                                detailsResponse.id,
-                                detailsResponse.name,
-                                detailsResponse.type.map { type ->
-                                    type.type
-                                }
-                            )
-                        )
-                    }
-                }
-
-                // Now you can notify your UI or do something with the updatedList
             }
+            )
         }
     }
-
-//    private fun loadPokemonList() {
-//        viewModelScope.launch {
-//            val response = repository.getPokemonList()
-//
-//            if (response != null) {
-//                val updatedList = mutableListOf<Pokemon>()
-//                val pokemonList = response.results
-//                for (pokemon in pokemonList) {
-//                    val numberToURL = pokemon.url
-//                        .replace("https://pokeapi.co/api/v2/pokemon/", "")
-//                        .replace("/", "").toInt()
-//
-//                    val detailsResponse = repository.getPokemonDetails(numberToURL)
-//
-//                    if (detailsResponse != null) {
-//                        updatedList.add(
-//                            Pokemon(
-//                                detailsResponse.id,
-//                                detailsResponse.name,
-//                                detailsResponse.type.map { type ->
-//                                    type.type
-//                                }
-//                            )
-//                        )
-//                    }
-//                }
-//                pokemons.postValue(updatedList)
-//            }
-//        }
-//    }
 }
