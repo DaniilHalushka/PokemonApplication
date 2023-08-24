@@ -6,16 +6,12 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.pokemonapp.Pokemon
 import com.example.pokemonapp.R
+import com.example.pokemonapp.models.Pokemon
 import com.squareup.picasso.Picasso
 
-class PokemonAdapter(private val pokemonList: List<Pokemon>) : RecyclerView.Adapter<PokemonAdapter.PokemonViewHolder>() {
-
-    inner class PokemonViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val pokemonImageView: ImageView = itemView.findViewById(R.id.pokemonImageView)
-        val pokemonTextView: TextView = itemView.findViewById(R.id.pokemonTextView)
-    }
+class PokemonAdapter(private val pokemonList: List<Pokemon?>) :
+    RecyclerView.Adapter<PokemonAdapter.PokemonViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PokemonViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -29,10 +25,23 @@ class PokemonAdapter(private val pokemonList: List<Pokemon>) : RecyclerView.Adap
 
     override fun onBindViewHolder(holder: PokemonViewHolder, position: Int) {
         val pokemon = pokemonList[position]
-        holder.pokemonTextView.text = pokemon.name
-        Picasso.get()
-            .load(pokemon.imageURL)
-            .into(holder.pokemonImageView)
-        TODO("Not yet implemented")
+        holder.showInfo(pokemon)
+    }
+
+
+    class PokemonViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        fun showInfo(item: Pokemon?) = with(itemView) {
+            val pokemonImage: ImageView = itemView.findViewById(R.id.pokemonImage)
+            val pokemonName: TextView = itemView.findViewById(R.id.pokemonName)
+
+
+            item?.let {
+                Picasso.get()
+                    .load(it.imageURL)
+                    .into(pokemonImage)
+
+                pokemonName.text = item.capitalizeName
+            }
+        }
     }
 }
